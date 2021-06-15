@@ -6,7 +6,7 @@ backend/node_modules
 frontend/node_modules
 
 # config
-backend/config
+backend/config.env
 
 /.pnp
 .pnp.js

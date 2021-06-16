@@ -84,10 +84,13 @@ const productSchema = mongoose.Schema(
         },
       },
     ],
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
-  {
-    timeStamps: true,
-  }
+  { timestamps: true }
 );
 
 const Product = mongoose.model("Product", productSchema);

@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const cloudinary = require("cloudinary");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const User = require("../models/userModel");
@@ -13,13 +14,22 @@ exports.signup = catchAsync(async (req, res, next) => {
     return next(new AppError("User with email already exists", 400));
   }
 
+  console.log(req.body);
+  const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    folder: "avatars",
+    width: 150,
+    crop: "scale",
+  });
+
+  console.log(result);
+
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
     avatar: {
-      public_id: "products/camera_ridc0i",
-      url: "https://res.cloudinary.com/bookit/image/upload/v1606231283/products/camera_ridc0i.jpg",
+      public_id: result.public_id,
+      url: result.secure_url,
     },
   });
 
@@ -75,11 +85,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   //Send it to the user's email
   try {
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/users/resetPassword/${resetToken}`;
+    // const resetURL = `${req.protocol}://${req.get(
+    //   "host"
+    // )}/api/v1/users/resetPassword/${resetToken}`;
 
-    const message = `Your password reset link is here: ${resetURL}`;
+    const resetURL = `${process.env.FRONTEND_URL}/resetPassword/${resetToken}`;
+
+    const message = `Click here to reset your password: <a href=${resetURL}><button>Reset Password</button></a>`;
 
     await sendEmail({
       to: user.email,
@@ -126,5 +138,9 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordResetExpires = undefined;
   await user.save();
 
-  createSendToken(user, 200, res);
+  res.status(200).json({
+    success: true,
+    message: "Password updated successfully ",
+  });
+  // createSendToken(user, 200, res);
 });

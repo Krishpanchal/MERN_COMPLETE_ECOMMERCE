@@ -35,6 +35,7 @@ const userSchema = mongoose.Schema(
         required: true,
       },
     },
+
     role: {
       type: String,
       default: "user",
@@ -44,9 +45,17 @@ const userSchema = mongoose.Schema(
     passwordResetExpires: String,
   },
   {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     timestamps: true,
   }
 );
+
+userSchema.virtual("cartItems", {
+  ref: "Cart",
+  foreignField: "user",
+  localField: "_id",
+});
 
 // Encrypt Password before save
 userSchema.pre("save", async function (next) {

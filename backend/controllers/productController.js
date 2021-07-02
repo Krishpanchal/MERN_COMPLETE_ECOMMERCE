@@ -19,12 +19,18 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 exports.getAllProducts = catchAsync(async (req, res, next) => {
   const productsCount = await Product.countDocuments();
 
-  const apiFeatures = new APIFeatures(Product.find(), req.query)
-    .search()
-    .filter()
-    .paginate();
+  const query = {
+    ...req.query,
+    limit: req.query.limit || 5,
+  };
 
-  const products = await apiFeatures.query;
+  const apiFeatures = new APIFeatures(Product.find(), query).search().filter();
+
+  let products = await apiFeatures.query;
+  let filteredProductsCount = products.length;
+
+  apiFeatures.paginate();
+  products = await apiFeatures.query;
 
   if (!products) {
     return next(new AppError("No Product found", 404));
@@ -34,6 +40,8 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
     success: true,
     results: products.length,
     productsCount,
+    productsPerPage: query.limit,
+    filteredProductsCount,
     products,
   });
 });

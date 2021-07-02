@@ -1,7 +1,9 @@
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
+const cloudinary = require("cloudinary");
 const createSendToken = require("../utils/createSendToken");
 const AppError = require("../utils/appError");
+const Cart = require("../models/cartModel");
 
 //  Get User Profile ==> /api/v1/users/me
 exports.getMe = catchAsync(async (req, res, next) => {
@@ -49,6 +51,27 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     email: req.body.email,
   };
 
+  if (req.body.avatar) {
+    console.log("Avatar there");
+    if (req.user.avatar.public_id !== req.body.avatar.public_id) {
+      console.log("No new avatar there");
+
+      const image_id = req.user.avatar.public_id;
+      const res = await cloudinary.v2.uploader.destroy(image_id);
+
+      const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 150,
+        crop: "scale",
+      });
+
+      newUserData.avatar = {
+        public_id: result.public_id,
+        url: result.secure_url,
+      };
+    }
+  }
+
   const updatedUser = await User.findByIdAndUpdate(req.user.id, newUserData, {
     new: true,
     runValidators: true,
@@ -66,7 +89,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 // Get All Users ==> /api/v1/users/
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
+  const users = await User.find().populate("cartItems");
 
   if (!users) {
     return next(new AppError("No users found"));
@@ -82,7 +105,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 // Get a user ==> /api/v1/users/:id (GET)
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id).populate("cartItems");
 
   if (!user) {
     return next(new AppError(`No user found with id: ${req.params.id}`));
@@ -128,6 +151,8 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError("No document found with that ID", 404));
   }
+
+  await Cart.deleteMany({ user: req.params.id });
 
   res.status(204).json({
     success: true,

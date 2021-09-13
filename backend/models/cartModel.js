@@ -14,7 +14,6 @@ const cartSchema = mongoose.Schema(
     },
     totalQuantity: {
       type: Number,
-      required: [true, "Cart product must have a product quantity"],
     },
     totalPrice: {
       type: Number,
@@ -27,8 +26,6 @@ const cartSchema = mongoose.Schema(
 );
 
 cartSchema.pre(/^find/, function (next) {
-  console.log("Hello");
-
   this.populate("user", "name email").populate(
     "product",
     "price stock name images"

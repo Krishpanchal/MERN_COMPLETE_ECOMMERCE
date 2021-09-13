@@ -33,7 +33,9 @@ exports.addToCartController = catchAsync(async (req, res, next) => {
   });
 
   if (updateCartItem) {
-    updateCartItem.totalQuantity += req.body.totalQuantity;
+    updateCartItem.totalQuantity = req.body.totalQuantity;
+    updateCartItem.totalPrice =
+      req.body.totalQuantity * updateCartItem.product.price;
     await updateCartItem.save();
 
     return res.status(200).json({

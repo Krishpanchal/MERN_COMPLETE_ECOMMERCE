@@ -14,6 +14,14 @@ router
   );
 
 router
+  .route("/admin")
+  .get(
+    auth.protect,
+    auth.restrictTo("admin"),
+    productController.getProductsForAdmin
+  );
+
+router
   .route("/:id")
   .get(productController.getProduct)
   .patch(
@@ -32,4 +40,5 @@ router
   .get(productController.getProductReview)
   .patch(auth.protect, productController.createProductReview)
   .delete(auth.protect, productController.deleteReview);
+
 module.exports = router;

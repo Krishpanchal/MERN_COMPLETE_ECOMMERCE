@@ -9,7 +9,6 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     shippingInfo,
     orderItems,
     paymentInfo,
-    itemsPrice,
     taxPrice,
     shippingPrice,
     totalPrice,
@@ -19,7 +18,6 @@ exports.createOrder = catchAsync(async (req, res, next) => {
     shippingInfo,
     orderItems,
     paymentInfo,
-    itemsPrice,
     taxPrice,
     shippingPrice,
     totalPrice,
@@ -35,18 +33,18 @@ exports.createOrder = catchAsync(async (req, res, next) => {
 
 // Get order = /api/v1/orders/:id
 exports.getOrder = catchAsync(async (req, res, next) => {
-  const orders = await Order.findById(req.params.id).populate(
+  const order = await Order.findById(req.params.id).populate(
     "user",
     "name email"
   );
 
-  if (!orders) {
+  if (!order) {
     return next(new AppError("No order found with id " + req.params.id));
   }
 
   res.status(200).json({
     success: true,
-    orders,
+    order,
   });
 });
 

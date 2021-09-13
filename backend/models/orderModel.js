@@ -11,7 +11,7 @@ const orderSchema = mongoose.Schema(
         type: String,
         required: true,
       },
-      phoneNo: {
+      phoneNumber: {
         type: Number,
         required: true,
       },
@@ -67,12 +67,6 @@ const orderSchema = mongoose.Schema(
 
     paidAt: {
       type: Date,
-    },
-
-    itemsPrice: {
-      type: Number,
-      required: true,
-      default: 0.0,
     },
 
     taxPrice: {

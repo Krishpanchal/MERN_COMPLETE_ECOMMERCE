@@ -5,12 +5,16 @@ import ProductDetail from "../../components/products/ProductDetail";
 import Loader from "../../components/layout/Loader";
 import Metadata from "../../components/layout/Metadata";
 import { useAlert } from "react-alert";
+import { useHistory } from "react-router-dom";
+import { RESET_CART_ITEM } from "../../constants/cartConstants";
+// import { RESET_PRODUCT } from "../../constants/productConstants";
 
 const ProductDetailsPage = ({ match }) => {
   const alert = useAlert();
+  const history = useHistory();
 
   const dispatch = useDispatch();
-  const { success } = useSelector((state) => state.cartReducer);
+  const { success } = useSelector((state) => state.cartActionsReducer);
   const { product, loading, error } = useSelector(
     (state) => state.productDetails
   );
@@ -22,16 +26,23 @@ const ProductDetailsPage = ({ match }) => {
       return alert.error(error);
     }
 
-    console.log("Hello");
-
     dispatch(getProductDetails(productId));
   }, [dispatch, productId, error, alert]);
 
   useEffect(() => {
     if (success) {
+      history.push("/cart");
       alert.success("Item added to cart");
+      dispatch({ type: RESET_CART_ITEM });
     }
-  }, [success, alert]);
+  }, [success, alert, history, dispatch]);
+
+  useEffect(() => {
+    return () => {
+      dispatch({ type: "CLEAR_PRODUCTS" });
+      console.log("Hello");
+    };
+  }, [dispatch]);
 
   let content = error ? (
     <Fragment>

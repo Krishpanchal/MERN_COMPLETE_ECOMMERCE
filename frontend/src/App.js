@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Redirect, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
@@ -17,10 +17,37 @@ import UpdatePassword from "./screens/user/UpdatePassword";
 import ForgotPassword from "./screens/auth/ForgotPassword";
 import ResetPassword from "./screens/auth/ResetPassword";
 import { fetchCartItems } from "./actions/cartActions";
+import { Dashboard } from "./screens/Adminpages/Dashboard";
+import AdminProducts from "./screens/Adminpages/products/AdminProducts";
+import CreateProduct from "./screens/Adminpages/products/CreateProduct";
+import UpdateProduct from "./screens/Adminpages/products/UpdateProduct";
+import Cart from "./screens/cart/Cart";
+import Shipping from "./screens/cart/Shipping";
+import CofirmOrder from "./screens/cart/CofirmOrder";
+import axios from "axios";
+import Payment from "./screens/cart/Payment";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import PaymentSuccess from "./screens/cart/PaymentSuccess";
+import MyOrders from "./screens/orders/MyOrders";
+import OrderDetails from "./screens/orders/OrderDetails";
+import AllOrders from "./screens/Adminpages/Orders/AllOrders";
 
 function App() {
   const { isAuthenticated, error } = useSelector((state) => state.authReducer);
   const dispatch = useDispatch();
+
+  const [stripeApiKey, setStripeApiKey] = useState("");
+
+  useEffect(() => {
+    async function getStripeApiKey() {
+      const { data } = await axios.get("/api/v1/payment/stripeApi");
+
+      setStripeApiKey(data.stripeApiKey);
+    }
+
+    getStripeApiKey();
+  }, []);
 
   useEffect(() => {
     dispatch(loadCurrentUser());
@@ -67,7 +94,54 @@ function App() {
           component={UpdatePassword}
           exact
         />
+
+        <ProtectedRoute path='/cart' component={Cart} exact />
+        <ProtectedRoute path='/shipping' component={Shipping} exact />
+        <ProtectedRoute path='/confirm' component={CofirmOrder} exact />
+        {stripeApiKey && (
+          <Elements stripe={loadStripe(stripeApiKey)}>
+            <ProtectedRoute path='/payment' component={Payment} exact />
+          </Elements>
+        )}
+        <ProtectedRoute path='/success' component={PaymentSuccess} exact />
+        <ProtectedRoute path='/orders' component={MyOrders} exact />
+        <ProtectedRoute path='/order/:id' component={OrderDetails} exact />
       </div>
+
+      <ProtectedRoute
+        path='/dashboard'
+        isAdmin={true}
+        component={Dashboard}
+        exact
+      />
+
+      <ProtectedRoute
+        path='/admin/products'
+        isAdmin={true}
+        component={AdminProducts}
+        exact
+      />
+
+      <ProtectedRoute
+        path='/admin/createProduct'
+        isAdmin={true}
+        component={CreateProduct}
+        exact
+      />
+
+      <ProtectedRoute
+        path='/admin/products/:id'
+        isAdmin={true}
+        component={UpdateProduct}
+        exact
+      />
+
+      <ProtectedRoute
+        path='/admin/orders'
+        isAdmin={true}
+        component={AllOrders}
+        exact
+      />
     </Layout>
   );
 }

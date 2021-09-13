@@ -23,16 +23,11 @@ const Header = () => {
     alert.success("Logged out successfullly");
   };
 
-  let userDropdownOptions =
-    user && user.role === "admin" ? (
-      <Link className='dropdown-item' to='/dashboard'>
-        Dashboard
-      </Link>
-    ) : (
-      <Link className='dropdown-item' to='/orders/me'>
-        Orders
-      </Link>
-    );
+  let userDropdownOptions = user && user.role === "admin" && (
+    <Link className='dropdown-item' to='/dashboard'>
+      Dashboard
+    </Link>
+  );
 
   let navigationOptions = user ? (
     <div className='ml-4 dropdown d-inline'>
@@ -56,6 +51,9 @@ const Header = () => {
 
       <div className='dropdown-menu' aria-labelledby='dropDownMenu'>
         {userDropdownOptions}
+        <Link className='dropdown-item' to='/orders'>
+          Orders
+        </Link>
         <Link className='dropdown-item' to='/me'>
           Profile
         </Link>

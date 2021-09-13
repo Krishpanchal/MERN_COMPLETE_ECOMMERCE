@@ -7,6 +7,7 @@ const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
@@ -23,6 +24,7 @@ app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/payment", paymentRoutes);
 
 app.use(globalErrorHandler);
 

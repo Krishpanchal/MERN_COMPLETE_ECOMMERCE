@@ -48,11 +48,14 @@ const Home = () => {
   const { keyword } = useParams();
 
   useEffect(() => {
+    dispatch(getProducts(keyword, currentPage, price, category, rating));
+  }, [alert, currentPage, keyword, price, category, rating, dispatch]);
+
+  useEffect(() => {
     if (error) {
       return alert.error(error);
     }
-    dispatch(getProducts(keyword, currentPage, price, category, rating));
-  }, [dispatch, error, alert, currentPage, keyword, price, category, rating]);
+  }, [dispatch, error, alert]);
 
   const handleCurrentPageChange = (pageNumber) => {
     setCurrentPage(pageNumber);

@@ -1,36 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Carousel } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { addItemToCart, fetchCartItems } from "../../actions/cartActions";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { addItemToCart } from "../../actions/cartActions";
+import SpinLoader from "../../components/layout/SpinLoader";
+import { Fragment } from "react";
+import SubmitProductReview from "../reivew/SubmitProductReview";
+import ReviewsList from "../reivew/ReviewsList";
 
 const ProductDetail = ({ product }) => {
-  const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const { id } = useParams();
+  const { cartLoading, cartItems } = useSelector((state) => state.cartReducer);
 
-  useEffect(() => {
-    if (product.stock === 0) setQuantity(0);
-    console.log("fd");
-  }, [setQuantity, product]);
-
-  const increaseQty = () => {
-    if (quantity >= product.stock || product.stock === 0) return;
-
-    setQuantity((prevState) => prevState + 1);
-  };
-
-  const decreaseQty = () => {
-    if (quantity <= 1) return;
-
-    setQuantity((prevState) => prevState - 1);
-  };
+  const doesItemExistInCart =
+    cartItems &&
+    cartItems.find((item) => {
+      return item.product._id === id;
+    });
 
   const addItemCart = () => {
-    dispatch(addItemToCart(product._id, quantity));
-    setTimeout(() => {
-      dispatch(fetchCartItems());
-    }, 1000);
+    dispatch(addItemToCart(product._id, 1));
   };
 
   return (
@@ -66,29 +57,30 @@ const ProductDetail = ({ product }) => {
         <hr />
 
         <p id='product_price'>${product.price}</p>
-        <div className='stockCounter d-inline'>
-          <span className='btn btn-danger minus' onClick={decreaseQty}>
-            -
-          </span>
 
-          <input
-            type='number'
-            className='form-control count d-inline'
-            value={quantity}
-            readOnly
-          />
-
-          <span className='btn btn-primary plus' onClick={increaseQty}>
-            +
-          </span>
-        </div>
-        <button
-          type='button'
-          id='cart_btn'
-          className='btn btn-primary d-inline ml-4'
-          onClick={addItemCart}>
-          Add to Cart
-        </button>
+        {cartLoading ? (
+          <SpinLoader />
+        ) : doesItemExistInCart ? (
+          <Link to={"/cart"}>
+            <button
+              type='button'
+              id='cart_btn'
+              className='btn btn-primary d-inline ml-4'>
+              Go to Cart
+            </button>
+          </Link>
+        ) : (
+          <Fragment>
+            <button
+              type='button'
+              id='cart_btn'
+              className='btn btn-primary d-inline ml-4'
+              onClick={addItemCart}
+              disabled={product.stock === 0 || cartLoading}>
+              {cartLoading ? <SpinLoader /> : "Add to cart"}
+            </button>
+          </Fragment>
+        )}
 
         <hr />
 
@@ -109,75 +101,10 @@ const ProductDetail = ({ product }) => {
         <p id='product_seller mb-3'>
           Sold by: <strong>{product.seller}</strong>
         </p>
-
-        <button
-          id='review_btn'
-          type='button'
-          className='btn btn-primary mt-4'
-          data-toggle='modal'
-          data-target='#ratingModal'>
-          Submit Your Review
-        </button>
-
-        <div className='row mt-2 mb-5'>
-          <div className='rating w-50'>
-            <div
-              className='modal fade'
-              id='ratingModal'
-              tabIndex='-1'
-              role='dialog'
-              aria-labelledby='ratingModalLabel'
-              aria-hidden='true'>
-              <div className='modal-dialog' role='document'>
-                <div className='modal-content'>
-                  <div className='modal-header'>
-                    <h5 className='modal-title' id='ratingModalLabel'>
-                      Submit Review
-                    </h5>
-                    <button
-                      type='button'
-                      className='close'
-                      data-dismiss='modal'
-                      aria-label='Close'>
-                      <span aria-hidden='true'>&times;</span>
-                    </button>
-                  </div>
-                  <div className='modal-body'>
-                    <ul className='stars'>
-                      <li className='star'>
-                        <i className='fa fa-star'></i>
-                      </li>
-                      <li className='star'>
-                        <i className='fa fa-star'></i>
-                      </li>
-                      <li className='star'>
-                        <i className='fa fa-star'></i>
-                      </li>
-                      <li className='star'>
-                        <i className='fa fa-star'></i>
-                      </li>
-                      <li className='star'>
-                        <i className='fa fa-star'></i>
-                      </li>
-                    </ul>
-
-                    <textarea
-                      name='review'
-                      id='review'
-                      className='form-control mt-3'></textarea>
-
-                    <button
-                      className='btn my-3 float-right review-btn px-4 text-white'
-                      data-dismiss='modal'
-                      aria-label='Close'>
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <SubmitProductReview id={product._id} />
+        {product.reviews && product.reviews.length > 0 && (
+          <ReviewsList reviews={product.reviews} />
+        )}
       </div>
     </div>
   );

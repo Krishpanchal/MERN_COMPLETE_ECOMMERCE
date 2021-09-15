@@ -16,13 +16,8 @@ import {
   UPDATE_ORDER_SUCCESS,
   DELETE_ORDER_FAIL,
   DELETE_ORDER_REQUEST,
-  DELETE_ORDER_RESET,
   DELETE_ORDER_SUCCESS,
 } from "../constants/orderConstants";
-import {
-  All_PRODUCTS_FAIL,
-  All_PRODUCTS_SUCCESS,
-} from "../constants/productConstants";
 
 export const clearErrors = () => async (dispatch) => {
   dispatch({

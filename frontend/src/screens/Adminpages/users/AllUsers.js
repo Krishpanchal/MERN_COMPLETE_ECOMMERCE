@@ -1,28 +1,29 @@
 import React, { Fragment, useEffect } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
-import { clearErrors, getAllOrders } from "../../../actions/orderActions";
+import { clearErrors, getAllUsers } from "../../../actions/userActions";
 import Sidebar from "../../../components/admin/Sidebar";
+import Users from "../../../components/admin/users/Users";
 import Loader from "../../../components/layout/Loader";
-import Orders from "../../../components/admin/orders/Orders";
 import Metadata from "../../../components/layout/Metadata";
-import { DELETE_ORDER_RESET } from "../../../constants/orderConstants";
+import { DELETE_USER_RESET } from "../../../constants/userConstants";
 
-const AllOrders = () => {
-  const { loading, error, orders } = useSelector((state) => state.allOrders);
-  const { isDeleted } = useSelector((state) => state.deleteOrder);
+const AllUsers = () => {
+  const { loading, error, users } = useSelector((state) => state.allUsers);
+  const { isDeleted } = useSelector((state) => state.deleteUser);
+
   const dispatch = useDispatch();
   const alert = useAlert();
 
   useEffect(() => {
-    dispatch(getAllOrders());
+    dispatch(getAllUsers());
   }, [dispatch]);
 
   useEffect(() => {
     if (isDeleted) {
-      alert.success("Order deleted successfully!");
-      dispatch(getAllOrders());
-      dispatch({ type: DELETE_ORDER_RESET });
+      alert.success("User deleted successfully!");
+      dispatch(getAllUsers());
+      dispatch({ type: DELETE_USER_RESET });
     }
   }, [isDeleted, dispatch, alert]);
 
@@ -33,9 +34,11 @@ const AllOrders = () => {
     }
   }, [error, dispatch, alert]);
 
+  console.log(`users, ${users}`);
+
   return (
     <Fragment>
-      <Metadata title='All Products' />
+      <Metadata title='All Users' />
       <div className='row'>
         <div className='col-12 col-md-2'>
           <Sidebar />
@@ -43,9 +46,8 @@ const AllOrders = () => {
 
         <div className='col-12 col-md-10'>
           <Fragment>
-            <h1 className='my-5'>All Orders</h1>
-
-            {loading ? <Loader /> : <Orders orders={orders} />}
+            <h1 className='my-5'>All Users</h1>
+            {loading ? <Loader /> : <Users users={users} />}
           </Fragment>
         </div>
       </div>
@@ -53,4 +55,4 @@ const AllOrders = () => {
   );
 };
 
-export default AllOrders;
+export default AllUsers;

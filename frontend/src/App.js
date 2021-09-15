@@ -33,6 +33,8 @@ import MyOrders from "./screens/orders/MyOrders";
 import OrderDetails from "./screens/orders/OrderDetails";
 import AllOrders from "./screens/Adminpages/Orders/AllOrders";
 import UpdateOrder from "./screens/Adminpages/Orders/UpdateOrder";
+import AllUsers from "./screens/Adminpages/users/AllUsers";
+import AdminUpdateUser from "./screens/Adminpages/users/AdminUpdateUser";
 
 function App() {
   const { isAuthenticated, error } = useSelector((state) => state.authReducer);
@@ -148,6 +150,20 @@ function App() {
         path='/admin/orders/:id'
         isAdmin={true}
         component={UpdateOrder}
+        exact
+      />
+
+      <ProtectedRoute
+        path='/admin/users'
+        isAdmin={true}
+        component={AllUsers}
+        exact
+      />
+
+      <ProtectedRoute
+        path='/admin/users/:id'
+        isAdmin={true}
+        component={AdminUpdateUser}
         exact
       />
     </Layout>

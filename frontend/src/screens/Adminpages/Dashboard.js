@@ -4,11 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllOrders } from "../../actions/orderActions";
 import { getAdminProducts } from "../../actions/productActions";
+import { getAllUsers } from "../../actions/userActions";
 import Sidebar from "../../components/admin/Sidebar";
 import SpinLoader from "../../components/layout/SpinLoader";
 
 export const Dashboard = () => {
   const { loading, products } = useSelector((state) => state.products);
+  const { loading: userLoading, usersLength } = useSelector(
+    (state) => state.allUsers
+  );
   const {
     loading: orderLoading,
     totalAmount,
@@ -23,6 +27,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     dispatch(getAllOrders());
+    dispatch(getAllUsers());
   }, [dispatch]);
 
   const productsCount = loading ? (
@@ -51,6 +56,7 @@ export const Dashboard = () => {
   );
 
   const ordersCount = orderLoading ? <SpinLoader /> : ordersLength;
+  const usersCount = userLoading ? <SpinLoader /> : usersLength;
   const totalOrdersAmount = orderLoading ? (
     <SpinLoader />
   ) : (
@@ -123,7 +129,7 @@ export const Dashboard = () => {
                 <div className='card-body'>
                   <div className='text-center card-font-size'>
                     Users
-                    <br /> <b>45</b>
+                    <br /> <b>{usersCount}</b>
                   </div>
                 </div>
                 <Link

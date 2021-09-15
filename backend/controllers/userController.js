@@ -127,7 +127,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   const newUserData = {
     name: req.body.name,
     email: req.body.email,
-    role: reqy.body.role,
+    role: req.body.role,
   };
 
   const updatedUser = await User.findByIdAndUpdate(req.params.id, newUserData, {
@@ -146,15 +146,21 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 // Delete a user ==> /api/v1/users/:id (Delete)
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndDelete(req.params.id);
+  const user = await User.findById(req.params.id);
+  console.log(user);
 
   if (!user) {
     return next(new AppError("No document found with that ID", 404));
   }
 
+  const image_id = req.user.avatar.public_id;
+  await cloudinary.v2.uploader.destroy(image_id);
+
+  await user.remove();
+
   await Cart.deleteMany({ user: req.params.id });
 
-  res.status(204).json({
+  res.status(200).json({
     success: true,
     data: null,
   });

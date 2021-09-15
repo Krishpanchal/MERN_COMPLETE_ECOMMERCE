@@ -32,6 +32,7 @@ import PaymentSuccess from "./screens/cart/PaymentSuccess";
 import MyOrders from "./screens/orders/MyOrders";
 import OrderDetails from "./screens/orders/OrderDetails";
 import AllOrders from "./screens/Adminpages/Orders/AllOrders";
+import UpdateOrder from "./screens/Adminpages/Orders/UpdateOrder";
 
 function App() {
   const { isAuthenticated, error } = useSelector((state) => state.authReducer);
@@ -140,6 +141,13 @@ function App() {
         path='/admin/orders'
         isAdmin={true}
         component={AllOrders}
+        exact
+      />
+
+      <ProtectedRoute
+        path='/admin/orders/:id'
+        isAdmin={true}
+        component={UpdateOrder}
         exact
       />
     </Layout>

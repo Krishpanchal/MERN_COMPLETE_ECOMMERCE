@@ -1,41 +1,41 @@
 import React, { Fragment, useEffect } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
-import { clearErrors, getAllOrders } from "../../../actions/orderActions";
+import { clearErrors, getOrderDetails } from "../../../actions/orderActions";
+import OrderUpdateDetails from "../../../components/admin/orders/OrderUpdateDetails";
 import Sidebar from "../../../components/admin/Sidebar";
 import Loader from "../../../components/layout/Loader";
-import Orders from "../../../components/admin/orders/Orders";
 import Metadata from "../../../components/layout/Metadata";
-import { DELETE_ORDER_RESET } from "../../../constants/orderConstants";
 
-const AllOrders = () => {
-  const { loading, error, orders } = useSelector((state) => state.allOrders);
-  const { isDeleted } = useSelector((state) => state.deleteOrder);
+const UpdateOrder = ({ match }) => {
+  const { order, loading, error } = useSelector((state) => state.orderDetails);
+  const { isUpdated } = useSelector((state) => state.updateOrder);
   const dispatch = useDispatch();
   const alert = useAlert();
+  const id = match.params.id;
+
+  console.log("order ", order);
 
   useEffect(() => {
-    dispatch(getAllOrders());
-  }, [dispatch]);
+    dispatch(getOrderDetails(id));
+  }, [dispatch, id]);
 
   useEffect(() => {
-    if (isDeleted) {
-      alert.success("product deleted successfully!");
-      dispatch(getAllOrders());
-      dispatch({ type: DELETE_ORDER_RESET });
+    if (isUpdated) {
+      dispatch(getOrderDetails(id));
     }
-  }, [isDeleted, dispatch, alert]);
+  }, [dispatch, isUpdated, id]);
 
   useEffect(() => {
     if (error) {
       alert.error(error);
-      return dispatch(clearErrors());
+      dispatch(clearErrors());
     }
   }, [error, dispatch, alert]);
 
   return (
     <Fragment>
-      <Metadata title='All Products' />
+      <Metadata title='Update Order' />
       <div className='row'>
         <div className='col-12 col-md-2'>
           <Sidebar />
@@ -43,7 +43,11 @@ const AllOrders = () => {
 
         <div className='col-12 col-md-10'>
           <Fragment>
-            {loading ? <Loader /> : <Orders orders={orders} />}
+            {loading ? (
+              <Loader />
+            ) : (
+              order && <OrderUpdateDetails order={order} />
+            )}
           </Fragment>
         </div>
       </div>
@@ -51,4 +55,4 @@ const AllOrders = () => {
   );
 };
 
-export default AllOrders;
+export default UpdateOrder;

@@ -130,7 +130,7 @@ exports.deleteOrder = catchAsync(async (req, res, next) => {
     return next(new AppError("No order found with id " + req.params.id, 400));
   }
 
-  res.status(204).json({
+  res.status(201).json({
     success: true,
   });
 });

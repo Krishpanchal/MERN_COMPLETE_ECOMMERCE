@@ -20,9 +20,11 @@ import {
 } from "./reducers/cartReducer";
 import {
   createOrderReducer,
+  deleteOrderReducer,
   getAllOrdersReducer,
   getMyOrdersReducer,
   orderDetailsReducer,
+  updateOrderReducer,
 } from "./reducers/orderReducer";
 import { reviewProductReducer } from "./reducers/reviewReducer";
 
@@ -42,6 +44,8 @@ const reducer = combineReducers({
   getOrders: getMyOrdersReducer,
   allOrders: getAllOrdersReducer,
   orderDetails: orderDetailsReducer,
+  updateOrder: updateOrderReducer,
+  deleteOrder: deleteOrderReducer,
   newReview: reviewProductReducer,
 });
 

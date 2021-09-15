@@ -50,14 +50,11 @@ export const Dashboard = () => {
     0
   );
 
-  console.log(ordersLength);
-  console.log(totalAmount);
-
   const ordersCount = orderLoading ? <SpinLoader /> : ordersLength;
   const totalOrdersAmount = orderLoading ? (
     <SpinLoader />
   ) : (
-    `${totalAmount.toFixed(2)}`
+    totalAmount && totalAmount.toFixed(2)
   );
 
   return (

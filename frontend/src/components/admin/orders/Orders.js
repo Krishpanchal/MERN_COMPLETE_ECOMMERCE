@@ -1,13 +1,27 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MDBDataTable } from "mdbreact";
-
+import { clearErrors, deleteOrder } from "../../../actions/orderActions";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 import { useAlert } from "react-alert";
-import SpinLoader from "../../../components/layout/SpinLoader";
+import SpinLoader from "../../layout/SpinLoader";
 
 const Orders = ({ orders }) => {
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.deleteOrder);
+  const alert = useAlert();
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
+    }
+  }, [error, dispatch, alert]);
+
+  const handleDelete = (id) => {
+    dispatch(deleteOrder(id));
+  };
+
   const setOrders = () => {
     const data = {
       columns: [
@@ -53,12 +67,14 @@ const Orders = ({ orders }) => {
         actions: (
           <Fragment>
             <Link
-              to={`/admin/order/${order._id}`}
+              to={`/admin/orders/${order._id}`}
               className='btn btn-primary py-1 px-2'>
               <i className='fa fa-eye'></i>
             </Link>
-            <button className='btn btn-danger py-1 px-2 ml-2'>
-              <i className='fa fa-trash'></i>
+            <button
+              className='btn btn-danger py-1 px-2 ml-2'
+              onClick={() => handleDelete(order._id)}>
+              {loading ? <SpinLoader /> : <i className='fa fa-trash'></i>}
             </button>
           </Fragment>
         ),

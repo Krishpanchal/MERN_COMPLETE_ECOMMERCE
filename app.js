@@ -27,7 +27,9 @@ app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 
-if (process.env.NODE_ENV === "PRODUCTION") {
+console.log(`------------ ${process.env.NODE_ENV} ---------------`);
+
+if (process.env.NODE_ENV == "production") {
   app.use(express.static("client/build"));
 
   app.get("*", (req, res) => {

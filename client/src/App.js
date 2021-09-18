@@ -35,6 +35,7 @@ import AllOrders from "./screens/Adminpages/Orders/AllOrders";
 import UpdateOrder from "./screens/Adminpages/Orders/UpdateOrder";
 import AllUsers from "./screens/Adminpages/users/AllUsers";
 import AdminUpdateUser from "./screens/Adminpages/users/AdminUpdateUser";
+import ProductReviews from "./screens/Adminpages/products/ProductReviews";
 
 function App() {
   const { isAuthenticated, error } = useSelector((state) => state.authReducer);
@@ -164,6 +165,12 @@ function App() {
         path='/admin/users/:id'
         isAdmin={true}
         component={AdminUpdateUser}
+        exact
+      />
+      <ProtectedRoute
+        path='/admin/reviews'
+        isAdmin={true}
+        component={ProductReviews}
         exact
       />
     </Layout>

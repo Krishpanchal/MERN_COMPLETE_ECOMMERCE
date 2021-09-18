@@ -207,7 +207,7 @@ exports.createProductReview = catchAsync(async (req, res, next) => {
   });
 });
 
-// Get reviews => /api/v1/prducts/reviews/:id
+// Get reviews => /api/v1/products/review/:id
 exports.getProductReview = catchAsync(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 

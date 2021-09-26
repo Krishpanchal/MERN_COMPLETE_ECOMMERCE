@@ -13,11 +13,11 @@ const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
 
-app.use(express.json());
 app.use(cookieParser());
 // app.use(bodyParser.urlencoded({ extended: true }));
 // express body parser
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50kb" }));
+app.use(express.urlencoded({ extended: true, limit: "50kb" }));
 
 app.use(fileUpload());
 

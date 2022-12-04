@@ -4,9 +4,9 @@
   "description": "Ecommerce Website using MERN",
   "main": "server.js",
   "scripts": {
-    "start": "SET NODE_ENV=PRODUCTION& nodemon server.js",
-    "dev": "SET NODE_ENV=DEVELOPMENT& nodemon server.js",
-    "prod": "SET NODE_ENV=PRODUCTION& nodemon server.js",
+    "start": "set NODE_ENV=PRODUCTION& nodemon server.js",
+    "dev": "set NODE_ENV=DEVELOPMENT& nodemon server.js",
+    "prod": "set NODE_ENV=PRODUCTION& nodemon server.js",
     "seeder": "node utils/seeder.js",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },

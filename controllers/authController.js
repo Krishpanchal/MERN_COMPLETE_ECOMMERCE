@@ -15,6 +15,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   }
 
   console.log(req.body);
+
   const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
     folder: "avatars",
     width: 150,

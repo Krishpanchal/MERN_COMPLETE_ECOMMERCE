@@ -55,12 +55,9 @@ function App() {
 
   useEffect(() => {
     dispatch(loadCurrentUser());
-    console.log("From load");
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("From clear");
-
     dispatch(clearErrors());
   }, [error, dispatch]);
 

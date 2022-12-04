@@ -4,7 +4,7 @@
   "description": "Ecommerce Website using MERN",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "SET NODE_ENV=PRODUCTION& nodemon server.js",
     "dev": "SET NODE_ENV=DEVELOPMENT& nodemon server.js",
     "prod": "SET NODE_ENV=PRODUCTION& nodemon server.js",
     "seeder": "node utils/seeder.js",

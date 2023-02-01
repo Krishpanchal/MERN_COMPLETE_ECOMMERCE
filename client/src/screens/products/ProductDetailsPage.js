@@ -7,7 +7,7 @@ import Metadata from "../../components/layout/Metadata";
 import { useAlert } from "react-alert";
 import { useHistory } from "react-router-dom";
 import { RESET_CART_ITEM } from "../../constants/cartConstants";
-// import { RESET_PRODUCT } from "../../constants/productConstants";
+import { RESET_PRODUCT } from "../../constants/productConstants";
 
 const ProductDetailsPage = ({ match }) => {
   const alert = useAlert();
@@ -39,8 +39,7 @@ const ProductDetailsPage = ({ match }) => {
 
   useEffect(() => {
     return () => {
-      dispatch({ type: "CLEAR_PRODUCTS" });
-      console.log("Hello");
+      dispatch({ type: RESET_PRODUCT });
     };
   }, [dispatch]);
 

@@ -13,7 +13,7 @@ const CreateProduct = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Electronics");
   const [stock, setStock] = useState("");
   const [seller, setSeller] = useState("");
   const [images, setImages] = useState([]);
